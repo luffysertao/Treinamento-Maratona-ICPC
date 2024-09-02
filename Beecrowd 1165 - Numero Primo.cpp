@@ -13,7 +13,7 @@ vi primes;  // Vetor global para armazenar todos os números primos encontrados
 
 // Função que implementa o crivo de Eratóstenes para encontrar todos os números primos até 'upperbound'
 void sieve(LL upperbound){
-    size = upperbound + 1;  // Ajusta 'size' para incluir o 'upperbound'
+    size = upperbound;  // Ajusta 'size' para incluir o 'upperbound'
     bs.set();  // Inicializa todos os bits do bitset 'bs' como 1 (assumindo que todos os números são primos)
     bs[0] = bs[1] = 0;  // Marca 0 e 1 como não primos
     for (LL i = 2; i*i <= size; i++){  // Itera de 2 até a raiz quadrada de 'size' para evitar overflow em i*i

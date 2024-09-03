@@ -4,60 +4,48 @@
 
 using namespace std;
 
-bitset<1005> bs;
-typedef long long LL;
-typedef vector<int> vi;
+typedef vector<int> vi; // Definindo um alias para um vetor de inteiros
 
-vi primos;
+// Função que usa o Crivo de Eratóstenes para gerar todos os primos até num
+void sieve(long long num, vi &primos) {
+    bitset<1005> bs; // Bitset para marcar números como primos ou não
+    bs.set(); // Inicializa todos os bits como 1 (assumindo que todos os números são primos)
+    bs[0] = bs[1] = 0; // 0 e 1 não são primos
 
-LL size;
-
-
-void sieve(LL num){
-    size = num;
-    bs.set();
-    bs[0] = bs[1] = 0;
-    for (LL i = 2; i*i <= size; i++){
-        if(bs[i]){
-            for(LL j = i*i; j <= size; j += i){
-                bs[j] = 0;
+    // Loop para marcar os múltiplos de cada número primo como não-primos
+    for (long long i = 2; i <= num; i++) {
+        if(bs[i]) { // Se i é primo
+            for(long long j = i*i; j <= num; j += i) {
+                bs[j] = 0; // Marca múltiplos de i como não-primos
             }
-            primos.push_back((int)i);
+            primos.push_back((int)i); // Adiciona o número primo ao vetor
         }
     }
 }
 
-
-void addPrime(int p, vector<int>& lista){
-    lista.push_back(p);
-    if (lista.size() > 3) {
-        lista.erase(lista.begin());
-    }
-}
-
-int main()
-{
+int main() {
     int num;
-    cin >> num;
+    cin >> num; // Recebe a entrada N
     
-    sieve(num); 
+    vi primos; // Vetor para armazenar os números primos
+    sieve(num, primos); // Gera todos os primos até num e os armazena em primos
     
-    vector<int> lista;
-    
-    for (int i = 2; i <= num; ++i) {
-        if (bs[i]) { 
-            addPrime(i, lista);
+    int X = -1, Y = -1; // Variáveis para armazenar os primos gêmeos
+
+    // Percorre a lista de primos para encontrar os primos gêmeos mais próximos
+    for (int i = 1; i < primos.size(); i++) {
+        if (primos[i] - primos[i - 1] == 2) { // Verifica se formam um par de primos gêmeos
+            X = primos[i - 1]; // Primeiro primo do par
+            Y = primos[i]; // Segundo primo do par
         }
     }
-    
-    if (!lista.empty()){
-        lista.erase(lista.begin());
+
+    // Verifica se encontrou algum par de primos gêmeos
+    if (X != -1 && Y != -1) {
+        cout << X << " " << Y << endl; // Imprime o par de primos gêmeos mais próximos
+    } else {
+        cout << "Nenhum par de primos gêmeos encontrado." << endl; // Mensagem de erro se não encontrar nenhum par
     }
-    
-    for (int p : lista) {
-        cout << p << " ";
-    }
-    cout << endl;
-    
+
     return 0;
 }

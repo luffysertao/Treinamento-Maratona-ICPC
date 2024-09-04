@@ -1,66 +1,65 @@
-#include <iostream>
-#include <bitset>
-#include <vector>
+#include <iostream>     // Biblioteca para entrada e saída de dados
+#include <bitset>       // Biblioteca para manipulação de bits, útil para representar grandes conjuntos de valores booleanos
+#include <vector>       // Biblioteca para usar a estrutura de dados vector
 
-using namespace std;
+using namespace std;    // Facilita o uso dos elementos do namespace padrão (std) sem precisar prefixá-los
 
-// Definindo um bitset grande para armazenar a primalidade de números até 10.000.010
-bitset<10000010> bs; 
-typedef long long LL; // Definindo um alias para "long long" como LL
-typedef vector<int> vi; // Definindo um alias para um vetor de inteiros como vi
+bitset<10000010> bs;    // Cria um bitset de tamanho 10.000.010, onde cada bit representa se um número é primo ou não
+typedef long long LL;   // Define um apelido para o tipo long long, simplificando o código
+typedef vector<int> vi; // Define um apelido para o tipo vector<int>, que é um vetor de inteiros
 
-vi primes; // Vetor para armazenar os números primos
+vi primes;              // Vetor de inteiros para armazenar os números primos encontrados
 
-// Função para gerar todos os primos até um limite superior usando o Crivo de Eratóstenes
+// Função para executar o Crivo de Eratóstenes e encontrar todos os primos até upperbound
 void sieve(LL upperbound) {
-    bs.set(); // Inicializa todos os bits como 1 (assumindo que todos os números são primos)
-    bs[0] = bs[1] = 0; // 0 e 1 não são primos
+    bs.set();           // Define todos os bits como 1 (inicialmente assume que todos os números são primos)
+    bs[0] = bs[1] = 0;  // Define 0 e 1 como não primos
 
-    // Loop para marcar os múltiplos de cada número primo como não-primos
+    // Loop para marcar os múltiplos dos números primos encontrados como não primos
     for (LL i = 2; i * i <= upperbound; i++) {
-        if (bs[i]) { // Se i é primo
+        if (bs[i]) {    // Se o número atual i é primo
             for (LL j = i * i; j <= upperbound; j += i) {
-                bs[j] = 0; // Marca os múltiplos de i como não-primos
+                bs[j] = 0; // Marca todos os múltiplos de i como não primos
             }
-            primes.push_back((int)i); // Adiciona o número primo ao vetor
+            primes.push_back((int)i); // Adiciona o número primo ao vetor primes
         }
     }
 }
 
-// Função para verificar se um número é primo
+// Função para verificar se um número n é primo
 bool isPrime(int n, LL upperbound) {
-    // Se o número está dentro do limite calculado, verifica diretamente no bitset
     if (n <= upperbound) {
-        return bs[n]; // Retorna se o número é primo ou não
+        return bs[n];  // Se o número está dentro do intervalo do bitset, retorna se ele é primo ou não
     }
 
-    // Se o número é maior que o limite calculado, verifica usando os primos armazenados
+    // Se o número é maior que upperbound, verifica se é divisível por algum primo já encontrado
     for (int i = 0; i < primes.size(); i++) {
         if (n % primes[i] == 0) {
-            return false; // Se o número é divisível por algum primo, não é primo
+            return false; // Se n é divisível por algum primo, então não é primo
         }
     }
 
-    return true; // Se não for divisível por nenhum primo, é primo
+    return true; // Se não for divisível por nenhum dos primos menores que sqrt(n), é primo
 }
 
+// Função principal
 int main(void) {
-    int qntd; // Variável para armazenar a quantidade de números a serem verificados
-    int num; // Variável para armazenar cada número a ser verificado
-    cin >> qntd; // Lê a quantidade de números
+    int qntd;     // Variável para armazenar a quantidade de números a serem verificados
+    int num;      // Variável para armazenar cada número a ser verificado
+    cin >> qntd;  // Lê a quantidade de números
 
-    LL upperbound = 10000000; // Definindo o limite superior para a geração de primos
-    sieve(upperbound); // Gera todos os primos até o limite superior
+    LL upperbound = 10000000; // Define o limite superior para o crivo de Eratóstenes
+    sieve(upperbound);        // Executa o crivo para encontrar todos os primos até upperbound
 
-    // Loop para verificar se cada número inserido é primo
+    // Loop para verificar se cada número fornecido é primo
     for (int i = 0; i < qntd; i++) {
         cin >> num; // Lê o número a ser verificado
         if (isPrime(num, upperbound)) {
-            cout << num << " eh primo" << endl; // Imprime se o número é primo
+            cout << num << " eh primo" << endl; // Se for primo, imprime que é primo
         } else {
-            cout << num << " nao eh primo" << endl; // Imprime se o número não é primo
+            cout << num << " nao eh primo" << endl; // Se não for primo, imprime que não é primo
         }
     }
 
-    return 0;
+    return 0; // Retorna 0 indicando que o programa terminou com sucesso
 }
